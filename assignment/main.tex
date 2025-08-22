@@ -1,0 +1,137 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{minted}
+
+\geometry{margin=1in}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=red,
+    urlcolor=blue
+}
+
+
+\begin{document}
+
+
+
+\begin{center}
+    \Large \textbf{Computational Astrophysics I}\\[6pt]
+    \large Assignment 1: Binaries and RNG\\[6pt]
+\end{center}
+
+
+\bigskip
+
+
+The assignment will not be graded, this is for your learning interest.
+
+
+\section{Binary files}
+
+This question teaches the concept that all files are actually binary files. It's just that some files has additional metadata, called \textit{file signatures} or \textit{magic numbers/headers}, which designates the file content type.
+
+\vspace{10pt}
+
+\textit{You need to install the package} \texttt{bitarray} \textit{to do the assignment. Install it using} \texttt{conda install bitarray -c conda-forge} \textit{or} \texttt{pip install conda-forge} \textit{based on your system's conda/python installation.}
+
+\vspace{10pt}
+
+With the assignment, you're given a file \texttt{secret.jpg}. Obviously, this is a ``secret'' file and you can't double click and open it.
+
+
+\begin{enumerate}
+    \item Using the given function, can you read its binary content? You are encouraged to play with the \texttt{bitsize} parameter.
+
+    \begin{minted}{python}
+    def read_raw_binary_bit(filepath, bitsize):
+        """
+        Reads a file given `filepath` and
+        outputs binary numbers in raw format with given `bitsize`
+        """
+        to_return = []
+        bits = bitarray()
+        with open(filepath, 'rb') as f:
+            bits.fromfile(f)
+        for i in range(0, len(bits), bitsize):
+            to_return.append(bits[i:i+bitsize].to01())
+        return to_return
+    \end{minted}
+
+    \item Did you know that computers store and process in bytes (1 byte = 8 bits)? Try setting bitsize=8, and convert each binary number to their decimal equivalents. (Hint: You can use the \texttt{int()} function with proper base.) Make a simple line plot of decimal values, do you notice any repeating shapes or cycles?
+
+    \item Do you remember the ASCII encoding that was discussed in the class? Can you decode those binaries or decimals to see whether there is a text hidden? (Hint: You can use the \texttt{chr()} function.) Do you see what the data was and does this correlate to what you saw in the plot earlier?
+
+    \item You can now open the file using relevant software, and see that it actually opens and has the content that you found out. Change the extension of the file from \texttt{.jpg} to something else, what happens if you try to open it?
+
+    \item [\textbf{BONUS:}] Try to read some other filetypes (e.g., .png, .pdf, .mp3, .mp4, ...) in binary and see the first few bytes. If you decode those first few bytes (first 4-8 bytes suffices) using ASCII, do you notice anything? Since you'll be reading bytewise, you can simply use the function below to read first 6 bytes,
+    \begin{minted}{python}
+        with open(file, 'rb') as f:
+            data = f.read(6)
+    \end{minted}
+    Note that, these binaries are often easier to read as hexadecimal numbers. Do you see why?
+
+    You can refer to the URL for a list of magic numbers for different file formats: \url{https://en.wikipedia.org/wiki/List_of_file_signatures}.
+\end{enumerate}
+
+
+\noindent Once you do the bonus, I have a treat! You'll be introduced to a tool that you can use to inspect a binary pretty easily.
+
+
+\section{Random number generators (RNG)}
+
+Consider the linear congruential generators defined, for $n \geq 0$, by
+\begin{align*}
+    \textsc{PiE} &: \quad Y_{n+1} = (3141592653Y_n + 2718281829) \bmod 2^{35} \\
+    \textsc{RandU} &: \quad Y_{n+1} = (65539Y_n) \bmod 2^{31}
+\end{align*}
+where the seed $Y_0$ can be an arbitrary integer for \textsc{PiE} while it must be an odd integer for RandU. The generator \textsc{PiE} is due to Knuth while RandU was a popular RNG in the 1960's and early 1970's.
+
+\noindent \textbf{(Caution!):} \textit{The numbers appearing above are exact integers. Do not modify their values!}
+
+\paragraph{In the following, use the seed value $Y_0 = 1$ in all calculations.}
+
+\begin{enumerate}
+    \item Set up a numerical code for generating the integer sequence $\{Y_1, Y_2, \ldots, Y_N\}$ for arbitrary $N \geq 1$, for each of the generators. Having computed these integers, the code should output the floating point numbers
+    \[
+    U_n \equiv \frac{Y_n}{m}, \quad 1 \leq n \leq N,
+    \]
+    where the modulus $m = 2^{35}$ for \textsc{PiE} and $m = 2^{31}$ for \textsc{RandU}. Demonstrate that your code reproduces the values (up to 5 significant digits)
+    \[
+    U_{10} = 5.5224 \times 10^{-1} \quad \text{for}~\textsc{PiE}, \qquad U_{10} = 6.8024 \times 10^{-3} \quad \text{for}~\textsc{RandU}.
+    \]
+    \textit{(Make sure you get these values, before proceeding.)}
+
+    \item For each of \textsc{PiE} and \textsc{RandU}, generate the sequence $\{U_n\}_{n=1}^N$ with $N = 10^4$ and construct a histogram $p(u)$ of these values using 10 equally spaced bins in the range $0 \leq u < 1$. The histograms should be normalised so that they cover unit area underneath themselves:
+    \[
+    \int_0^1 du \, p(u) = 1.
+    \]
+    Plot and compare the resulting histograms with the expected distribution
+    \[
+    p(u) = \begin{cases}
+        1, & 0 \leq u < 1, \\
+        0, & \text{otherwise}.
+    \end{cases}
+    \]
+
+    \item For each of \textsc{PiE} and \textsc{RandU}, generate the sequence of doublets
+    \[
+    \{(U_{2n-1}, U_{2n})\}_{n=1}^N \quad \text{with } N = 10^4.
+    \]
+    Plot each of these sequences (separately) as scatter plots in 2 dimensions (i.e., interpret these sequences as $\{(x_n, y_n)\}_{n=1}^N$). Do the 2-d distributions appear uniform in each case?
+
+    \item For each of \textsc{PiE} and \textsc{RandU}, generate the sequence of triplets
+    \[
+    \{(U_{3n-2}, U_{3n-1}, U_{3n})\}_{n=1}^N \quad \text{with } N = 10^4.
+    \]
+    Plot each of these sequences (separately) as scatter plots in 3 dimensions (i.e., interpret these sequences as $\{(x_n, y_n, z_n)\}_{n=1}^N$). Do the 3-d distributions appear uniform in each case?
+
+    \textbf{Hint:} To answer this question properly you must explore a wide range of viewing angles (``camera positions'') for the plot. You only need to report the most interesting of these.
+
+    \item Based on the results above, which RNG is better, \textsc{PiE} or \textsc{RandU}? Why?
+\end{enumerate}
+
+\end{document}

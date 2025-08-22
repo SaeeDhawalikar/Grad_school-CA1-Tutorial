@@ -1,0 +1,4 @@
+.ipynb_checkpoints/
+
+assignment/out/*
+!assignment/out/main.pdf
