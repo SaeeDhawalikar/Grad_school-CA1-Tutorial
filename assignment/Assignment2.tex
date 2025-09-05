@@ -1,0 +1,52 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{minted}
+
+\geometry{margin=1in}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=red,
+    urlcolor=blue
+}
+
+
+\begin{document}
+
+
+
+\begin{center}
+    \Large \textbf{Computational Astrophysics I}\\[6pt]
+    \large Assignment 2: $\chi^2$ and $KS$ test\\[6pt]
+\end{center}
+
+
+\bigskip
+\section*{Assignment Instructions}
+%
+
+This assignment will be graded and must be submitted by \textbf{12th September, 2025}.\\ 
+
+For both questions, you are expected to write your own functions; do not use the built-in \texttt{scipy} functions to perform the tests.  \\
+
+Please submit two files: 
+\begin{enumerate}
+    \item  A Jupyter Notebook with your codes.
+    \item  A single PDF containing your final answers, plots, and interpretations.  
+\end{enumerate}
+Email both these files to \texttt{saee.dhawalikar@iucaa.in} and \texttt{anirban.kopty@iucaa.in}, with a cc to \texttt{aseem@iucaa.in}.  
+Use the subject line: \texttt{CA-I Assignment-I 2025}.
+
+\section{$\chi^2$ Test}
+The file chi2.csv provided to you contains $3$ data sets, A, B and C. Perform $\chi^2$ test on each of these data sets, and interpret the results.
+
+\section{Kolmogorov–Smirnov (KS) test}
+\begin{itemize}
+    \item The file \texttt{ks.fits} contains $6$ data sets, structured differently from the FITS files discussed in class. Examine its format and load the six arrays. If you are unable to read the file, you may use the function provided in \texttt{fits.py} to load the data. 
+    \item Perform the KS test on each of these $6$ data-sets, comparing them with the standard normal distribution $\mathcal{N}(0,1)$.
+    \item Report your results interpretations, along with suitable visualizations.
+\end{itemize}
+\end{document}
