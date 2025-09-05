@@ -1,4 +1,5 @@
 .ipynb_checkpoints/
 
+_minted*
 assignment/out/*
-!assignment/out/main.pdf
+!assignment/out/*.pdf
